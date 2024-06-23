@@ -4,7 +4,7 @@ import CrowdfundingABI from "../src/abi/Crowdfunding";
 const provider = new ethers.providers.Web3Provider(window.ethereum);
 const signer = provider.getSigner();
 
-const crowdfundingAddress = "0x38420dF5F67DEbE6d6f62176582FB36cF49a0B65";
+const crowdfundingAddress = "0x9a738c3D025E503cF14a598E5Ad45F92bF46877a";
 const crowdfundingContract = new ethers.Contract(
   crowdfundingAddress,
   CrowdfundingABI,
@@ -28,7 +28,7 @@ export const getAllProjects = async () => {
       const project = await getProjectDetails(i);
       projects.push(project);
     }
-    console.log(projects[1]);
+
     return projects;
   } catch (error) {
     console.error("Error fetching all projects:", error);

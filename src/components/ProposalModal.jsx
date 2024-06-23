@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 const Modal = ({ isOpen, onClose, startup, handleAction }) => {
   const handleActionSubmit = async (e, action) => {
     e.preventDefault();
@@ -11,7 +9,7 @@ const Modal = ({ isOpen, onClose, startup, handleAction }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
       <div className="bg-white rounded-lg shadow-lg p-6 w-11/12 md:w-1/2 lg:w-1/3">
-        <h2 className="text-2xl font-bold mb-4">{startup.name}</h2>
+        <h2 className="text-2xl font-bold mb-4">{startup.companyName}</h2>
         <p className="text-gray-700 mb-2">
           <strong>Funding Goal:</strong> {startup.fundingGoal} ETH
         </p>
@@ -20,6 +18,9 @@ const Modal = ({ isOpen, onClose, startup, handleAction }) => {
         </p>
         <p className="text-gray-700 mb-4">
           <strong>Description:</strong> {startup.description}
+        </p>
+        <p className="text-gray-700 mb-4">
+          <strong>Owner:</strong> {startup.owner}
         </p>
 
         {/* Withdraw Funds Form */}

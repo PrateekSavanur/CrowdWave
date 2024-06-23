@@ -16,7 +16,10 @@ const Hero = ({
   }, [searchFocus, searchRef, setSearchFocus]);
 
   return (
-    <div className="w-11/12 xl:w-4/5 h-[350px] md:h-[450px] m-auto bg-gradient-to-r from-blue-200 to-purple-200 rounded-xl shadow-lg overflow-hidden mb-10">
+    <div
+      id="hero"
+      className="w-11/12 xl:w-4/5 h-[350px] md:h-[450px] m-auto bg-gradient-to-r from-blue-200 to-purple-200 rounded-xl shadow-lg overflow-hidden mb-10"
+    >
       <div className="w-full h-full flex flex-col md:flex-row justify-center items-center">
         <div className="w-11/12 xl:w-1/2 p-5 space-y-5 text-center md:text-left">
           <h1 className="text-4xl md:text-5xl font-semibold text-gray-800">

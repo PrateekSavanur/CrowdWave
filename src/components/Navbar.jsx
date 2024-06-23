@@ -1,13 +1,14 @@
-import { AiOutlineSearch } from "react-icons/ai";
 import { Link } from "react-router-dom";
 
-const Navbar = ({ handleSearchFocus }) => {
+const Navbar = () => {
   return (
-    <nav className="w-full px-4 xl:px-0 xl:max-w-screen-xl mx-auto flex justify-between items-center py-5 bg-white shadow-md rounded-xl">
-      <h1 className="text-3xl font-bold text-gray-800 pl-8">
-        CROWD<span className="text-amber-500">WAVE</span>
+    <div className="w-full px-4 xl:px-0 xl:max-w-screen-xl mx-auto flex justify-between items-center py-5 bg-white">
+      <h1 className="text-3xl font-bold text-gray-800">
+        <Link to="/">
+          CROWD<span className="text-amber-500">WAVE</span>
+        </Link>
       </h1>
-      <div className="hidden md:flex flex-1 justify-center items-center">
+      <div className="flex-1 flex justify-end items-center">
         <ul className="flex space-x-8 text-base font-medium text-gray-600">
           <li className="hover:text-blue-500 cursor-pointer">
             <Link to="/products">Startups</Link>
@@ -23,14 +24,7 @@ const Navbar = ({ handleSearchFocus }) => {
           </li>
         </ul>
       </div>
-      <div className="flex items-center pr-8">
-        <AiOutlineSearch
-          className="text-gray-600 hover:text-blue-500 cursor-pointer"
-          size={"1.5rem"}
-          onClick={handleSearchFocus}
-        />
-      </div>
-    </nav>
+    </div>
   );
 };
 

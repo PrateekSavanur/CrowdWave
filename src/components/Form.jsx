@@ -14,7 +14,7 @@ function Form() {
     description: "",
   });
 
-  const contractAddress = "0x38420dF5F67DEbE6d6f62176582FB36cF49a0B65";
+  const contractAddress = "0x9a738c3D025E503cF14a598E5Ad45F92bF46877a";
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -82,11 +82,14 @@ function Form() {
   };
 
   return (
-    <div className="flex justify-center items-center h-full mt-6">
+    <div className="flex justify-center items-center h-full mt-6 ">
       <form
         onSubmit={handleSubmit}
         className="space-y-4 p-4 bg-white shadow-md rounded-lg max-w-lg w-full"
       >
+        <h1 className="text-3xl font-bold text-center mb-4">
+          <span className="text-amber-500">RAISE </span>FUNDS
+        </h1>
         <div>
           <label className="block text-gray-700">Company Name</label>
           <input
@@ -175,6 +178,13 @@ function Form() {
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-amber-500 focus:border-amber-500 sm:text-sm"
             placeholder="Enter token per ETH"
           />
+        </div>
+
+        <div className="text-red-600 text-center mt-2">
+          <p>
+            Make sure your token minted does not goes under 1. It can cause
+            issues with ICO
+          </p>
         </div>
 
         <button

@@ -4,6 +4,7 @@ import { ethers } from "ethers";
 import CrowdfundingAbi from "../abi/Crowdfunding.json";
 import { getAllProjects } from "../../utils/crowdfunding";
 import SearchBar from "./SearchBar";
+import { FaBullseye, FaPiggyBank } from "react-icons/fa";
 
 const Proposals = () => {
   const [startups, setStartups] = useState([]);
@@ -14,18 +15,53 @@ const Proposals = () => {
 
   useEffect(() => {
     const fetchProjects = async () => {
-      const projects = await getAllProjects();
-      const formattedProjects = projects.map((project, index) => ({
-        id: index + 1,
-        name: `Project ${index + 1}`,
-        companyName: project.companyName,
-        description: project.description,
-        fundingGoal: ethers.utils.formatEther(project.fundingGoal).toString(),
-        amountRaised: ethers.utils.formatEther(project.funded).toString(),
-      }));
+      if (!window.ethereum) {
+        alert("MetaMask is required to fetch project details");
+        return;
+      }
 
-      setStartups(formattedProjects);
-      setFilteredStartups(formattedProjects);
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const contract = new ethers.Contract(
+        "0x9a738c3D025E503cF14a598E5Ad45F92bF46877a",
+        CrowdfundingAbi,
+        provider
+      );
+
+      try {
+        const projects = await getAllProjects();
+        console.log("Fetched Projects:", projects); // Add logging
+        const formattedProjects = await Promise.all(
+          projects.map(async (project, index) => {
+            if (project) {
+              const details = await contract.getProjectDetails(index + 1);
+              return {
+                id: index + 1,
+                name: `Project ${index + 1}`,
+                companyName: details.companyName,
+                description: details.description,
+                tokenName: details.tokenName,
+                tokenTicker: details.tokenTicker,
+                tokenContractAddress: details.tokenContractAddress,
+                funded: ethers.utils.formatEther(details.funded),
+                fundingGoal: ethers.utils.formatEther(details.fundingGoal),
+                closed: details.closed,
+                deadline: new Date(details.deadline * 1000).toLocaleString(),
+                tokensPerEth: details.tokensPerEth.toString(),
+                owner: details.owner,
+                icoCompleted: details.icoCompleted,
+              };
+            } else {
+              return null;
+            }
+          })
+        );
+
+        const validProjects = formattedProjects.filter((p) => p !== null);
+        setStartups(validProjects);
+        setFilteredStartups(validProjects);
+      } catch (error) {
+        console.error("Error fetching project details:", error);
+      }
     };
 
     fetchProjects();
@@ -57,7 +93,7 @@ const Proposals = () => {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
     const contract = new ethers.Contract(
-      "0x38420dF5F67DEbE6d6f62176582FB36cF49a0B65",
+      "0x9a738c3D025E503cF14a598E5Ad45F92bF46877a",
       CrowdfundingAbi,
       signer
     );
@@ -96,23 +132,25 @@ const Proposals = () => {
           {filteredStartups.map((startup) => (
             <div
               key={startup.id}
-              className="product rounded-lg overflow-hidden shadow-md cursor-pointer"
+              className="product rounded-lg overflow-hidden shadow-lg cursor-pointer bg-gradient-to-r from-yellow-300 via-orange-300 to-amber-300 transform transition-transform duration-300 hover:scale-105"
               onClick={() => handleCardClick(startup)}
             >
-              <div className="p-4">
-                <p className="text-lg font-semibold text-gray-800">
+              <div className="p-6 ">
+                <p className="text-xl font-bold text-black mb-2">
                   {startup.companyName}
                 </p>
-                <p className="text-sm text-gray-500 mb-2">
-                  {startup.description}
-                </p>
+
                 <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-gray-600">
-                      Goal: {startup.fundingGoal} ETH
+                  <div className="flex items-center space-x-2">
+                    <FaBullseye className="text-black" />
+                    <p className="text-sm text-black">
+                      Goal: {startup.fundingGoal}
                     </p>
-                    <p className="text-sm text-gray-600">
-                      Raised: {startup.amountRaised} ETH
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <FaPiggyBank className="text-black" />
+                    <p className="text-sm text-black">
+                      Raised: {startup.funded}
                     </p>
                   </div>
                 </div>
