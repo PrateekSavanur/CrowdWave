@@ -156,6 +156,16 @@
     {
         "inputs": [
             {
+                "internalType": "string",
+                "name": "_companyName",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "_description",
+                "type": "string"
+            },
+            {
                 "internalType": "address",
                 "name": "_owner",
                 "type": "address"
@@ -400,6 +410,26 @@
         "type": "function",
         "name": "projects",
         "outputs": [
+            {
+                "internalType": "string",
+                "name": "companyName",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "description",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "tokenName",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "tokenTicker",
+                "type": "string"
+            },
             {
                 "internalType": "address",
                 "name": "tokenContractAddress",

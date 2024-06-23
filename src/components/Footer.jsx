@@ -4,7 +4,7 @@ import { FaTwitter, FaLinkedin } from "react-icons/fa";
 
 const Footer = () => {
   return (
-    <footer className="w-4/5 m-auto p-10">
+    <footer id="footer" className="w-4/5 m-auto p-10">
       <div className="md:flex justify-between items-start my-10">
         {/* Left Section */}
         <div className="space-y-5 py-5 border-b">

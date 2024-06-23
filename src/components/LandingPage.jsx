@@ -1,13 +1,9 @@
 import { useEffect, useState } from "react";
-// import { ethers } from "ethers";
 import arrowBlack from "../images/arrow-black.png";
 import userImg from "../images/user.png";
 
-// const CONFIG = {
-//   CHAINID: "0xaa36a7", // Sepolia testnet chain ID in hex
-// };
-
 const LandingPage = () => {
+  // eslint-disable-next-line no-unused-vars
   const [account, setAccount] = useState(null);
 
   useEffect(() => {

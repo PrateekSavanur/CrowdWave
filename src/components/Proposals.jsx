@@ -1,13 +1,11 @@
 import { useState, useEffect } from "react";
-import { BsArrowRight, BsArrowLeft } from "react-icons/bs";
-import { BiCube } from "react-icons/bi";
-import Hero from "./Hero";
-import Modal from "./Modal";
-import { getAllProjects } from "../../utils/crowdfunding";
+import Modal from "./ProposalModal";
 import { ethers } from "ethers";
 import CrowdfundingAbi from "../abi/Crowdfunding.json";
+import { getAllProjects } from "../../utils/crowdfunding";
+import SearchBar from "./SearchBar";
 
-const Products = ({ searchFocus, setSearchFocus, searchRef }) => {
+const Proposals = () => {
   const [startups, setStartups] = useState([]);
   const [filteredStartups, setFilteredStartups] = useState([]);
   const [selectedStartup, setSelectedStartup] = useState(null);
@@ -21,12 +19,9 @@ const Products = ({ searchFocus, setSearchFocus, searchRef }) => {
         id: index + 1,
         name: `Project ${index + 1}`,
         companyName: project.companyName,
-        fundingGoal: `${ethers.utils
-          .formatEther(project.fundingGoal)
-          .toString()} ETH`,
-        amountRaised: `${ethers.utils
-          .formatEther(project.funded)
-          .toString()} ETH`,
+        description: project.description,
+        fundingGoal: ethers.utils.formatEther(project.fundingGoal).toString(),
+        amountRaised: ethers.utils.formatEther(project.funded).toString(),
       }));
 
       setStartups(formattedProjects);
@@ -43,14 +38,6 @@ const Products = ({ searchFocus, setSearchFocus, searchRef }) => {
     setFilteredStartups(filtered);
   }, [searchQuery, startups]);
 
-  useEffect(() => {
-    if (isModalOpen) {
-      document.body.classList.add("overflow-hidden");
-    } else {
-      document.body.classList.remove("overflow-hidden");
-    }
-  }, [isModalOpen]);
-
   const handleCardClick = (startup) => {
     setSelectedStartup(startup);
     setIsModalOpen(true);
@@ -61,9 +48,9 @@ const Products = ({ searchFocus, setSearchFocus, searchRef }) => {
     setSelectedStartup(null);
   };
 
-  const contributeFunds = async (projectId, amount) => {
+  const handleAction = async (projectId, action) => {
     if (!window.ethereum) {
-      alert("MetaMask is required to contribute funds");
+      alert("MetaMask is required to perform this action");
       return;
     }
 
@@ -75,31 +62,36 @@ const Products = ({ searchFocus, setSearchFocus, searchRef }) => {
       signer
     );
 
-    const tx = await contract.contributeFunds(projectId, {
-      value: ethers.utils.parseEther(amount),
-    });
-    await tx.wait();
-    alert("Contribution successful!");
+    try {
+      switch (action) {
+        case "withdrawFunds":
+          await contract.withdrawFunds(projectId);
+          break;
+        case "startICO":
+          await contract.startICO(projectId);
+          break;
+        case "distributeTokens":
+          await contract.distributeTokens(projectId);
+          break;
+        case "withdrawLeftTokens":
+          await contract.withdrawLeftTokens(projectId);
+          break;
+        default:
+          throw new Error("Unknown action");
+      }
+      alert(`${action} successful for project ${projectId}`);
+      handleCloseModal();
+    } catch (error) {
+      console.error(`Error ${action}:`, error);
+      alert(`Error ${action}: ${error.message || error.toString()}`);
+    }
   };
 
   return (
     <>
-      <Hero
-        searchFocus={searchFocus}
-        setSearchFocus={setSearchFocus}
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-        searchRef={searchRef}
-      />
       <div className="w-4/5 m-auto space-y-10 mb-20">
-        <div className="flex justify-between items-center p-2">
-          <ul className="flex items-center space-x-6 text-gray-800 text-lg font-medium">
-            <li className="flex items-center space-x-2 cursor-pointer hover:text-blue-500">
-              <BiCube size={24} />
-              <span>All Startups</span>
-            </li>
-          </ul>
-        </div>
+        <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+
         <div className="products grid xl:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-4">
           {filteredStartups.map((startup) => (
             <div
@@ -109,7 +101,7 @@ const Products = ({ searchFocus, setSearchFocus, searchRef }) => {
             >
               <div className="p-4">
                 <p className="text-lg font-semibold text-gray-800">
-                  {startup.name}
+                  {startup.companyName}
                 </p>
                 <p className="text-sm text-gray-500 mb-2">
                   {startup.description}
@@ -117,10 +109,10 @@ const Products = ({ searchFocus, setSearchFocus, searchRef }) => {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-gray-600">
-                      Goal: {startup.fundingGoal}
+                      Goal: {startup.fundingGoal} ETH
                     </p>
                     <p className="text-sm text-gray-600">
-                      Raised: {startup.amountRaised}
+                      Raised: {startup.amountRaised} ETH
                     </p>
                   </div>
                 </div>
@@ -133,7 +125,7 @@ const Products = ({ searchFocus, setSearchFocus, searchRef }) => {
             isOpen={isModalOpen}
             onClose={handleCloseModal}
             startup={selectedStartup}
-            contributeFunds={contributeFunds}
+            handleAction={handleAction}
           />
         )}
       </div>
@@ -141,4 +133,4 @@ const Products = ({ searchFocus, setSearchFocus, searchRef }) => {
   );
 };
 
-export default Products;
+export default Proposals;

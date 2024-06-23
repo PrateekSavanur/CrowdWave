@@ -4,7 +4,7 @@ import CrowdfundingABI from "../src/abi/Crowdfunding";
 const provider = new ethers.providers.Web3Provider(window.ethereum);
 const signer = provider.getSigner();
 
-const crowdfundingAddress = "0x50eB73F0C109564151dde97FF9798e4485c8f888";
+const crowdfundingAddress = "0x38420dF5F67DEbE6d6f62176582FB36cF49a0B65";
 const crowdfundingContract = new ethers.Contract(
   crowdfundingAddress,
   CrowdfundingABI,
